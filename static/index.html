@@ -2,24 +2,145 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>LawBot – criminal & immigration answers</title>
-  <style>
-    body{font-family:system-ui;margin:0 auto;max-width:800px}
-    #chat{margin:20px 0;min-height:60vh;overflow:auto;border:1px solid #ddd;padding:10px}
-    .bubble{padding:8px 12px;border-radius:10px;margin:4px 0;max-width:80%}
-    .user{background:#cfe2ff;margin-left:auto}
-    .bot {background:#f1f1f1;margin-right:auto}
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LawBot – Criminal & Immigration Advisor</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <!-- Markdown parser -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <style>
+    /* Reset & Base */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f3f4f6;
+      color: #111827;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Container */
+    .container {
+      width: 100%;
+      max-width: 600px;
+      height: 80vh;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Header */
+    header {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid #e5e7eb;
+      font-size: 1.25rem;
+      font-weight: 600;
+      background: #ffffff;
+    }
+
+    /* Chat area */
+    #chat {
+      flex: 1;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      overflow-y: auto;
+    }
+
+    /* Bubbles */
+    .bubble {
+      max-width: 80%;
+      padding: 0.75rem 1rem;
+      border-radius: 16px;
+      line-height: 1.4;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+      word-wrap: break-word;
+      animation: fadeIn 0.2s ease-in-out;
+    }
+    .user {
+      align-self: flex-end;
+      background: #3b82f6;
+      color: #ffffff;
+      border-bottom-right-radius: 4px;
+    }
+    .bot {
+      align-self: flex-start;
+      background: #f3f4f6;
+      color: #111827;
+      border-bottom-left-radius: 4px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Input form */
+    form {
+      display: flex;
+      border-top: 1px solid #e5e7eb;
+      background: #ffffff;
+      padding: 0.5rem;
+      gap: 0.5rem;
+    }
+    textarea#prompt {
+      flex: 1;
+      resize: none;
+      overflow: hidden;
+      min-height: 2.5rem;
+      max-height: 8rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      padding: 0.5rem 0.75rem;
+      font-size: 1rem;
+      line-height: 1.4;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    textarea#prompt:focus {
+      border-color: #3b82f6;
+    }
+    button {
+      border: none;
+      background: #3b82f6;
+      color: #ffffff;
+      font-weight: 600;
+      padding: 0 1.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover {
+      background: #2563eb;
+    }
+    button:active {
+      background: #1d4ed8;
+    }
+  </style>
 </head>
+
 <body>
-  <h1>Ask LawBot</h1>
-  <div id="chat"></div>
-  <form id="form">
-    <input id="prompt" placeholder="Type a question…" style="width:80%">
-    <button>Send</button>
-  </form>
+  <div class="container">
+    <header>LawBot – Criminal & Immigration Advisor</header>
+    <div id="chat"></div>
+    <form id="form">
+      <textarea
+        id="prompt"
+        placeholder="Ask a legal question…"
+        autocomplete="off"
+        rows="1"
+      ></textarea>
+      <button type="submit">Send</button>
+    </form>
+  </div>
 
   <script>
     const chat  = document.getElementById('chat');
@@ -27,35 +148,52 @@
     const input = document.getElementById('prompt');
     let thread_id = null;
 
+    // Auto‑resize the textarea height based on content
+    function autoResize() {
+      input.style.height = 'auto';
+      input.style.height = input.scrollHeight + 'px';
+    }
+    input.addEventListener('input', autoResize);
+
     function add(text, cls){
       const div = document.createElement('div');
       div.className = 'bubble ' + cls;
-      // Render Markdown to HTML
       div.innerHTML = marked.parse(text);
       chat.appendChild(div);
       chat.scrollTop = chat.scrollHeight;
     }
 
-    form.onsubmit = async e => {
+    form.addEventListener('submit', async e => {
       e.preventDefault();
       const msg = input.value.trim();
       if (!msg) return;
       add(msg, 'user');
       input.value = '';
+      autoResize();
+      input.disabled = true;
 
       try {
         const res = await fetch('https://lawbot-api.onrender.com/chat', {
           method: 'POST',
-          headers: {'Content-Type':'application/json'},
-          body: JSON.stringify({message: msg, thread_id})
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: msg, thread_id })
         });
         const data = await res.json();
         thread_id = data.thread_id;
         add(data.answer, 'bot');
       } catch (err) {
-        add('⚠️ Error fetching reply. Please try again.', 'bot');
+        add('⚠️ Error connecting to server. Please try again.', 'bot');
         console.error(err);
+      } finally {
+        input.disabled = false;
+        input.focus();
       }
+    });
+
+    // Initial focus & resize
+    window.onload = () => {
+      autoResize();
+      input.focus();
     };
   </script>
 </body>
