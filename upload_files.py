@@ -1,6 +1,6 @@
 import openai, glob, json, os
 from dotenv import load_dotenv
-load_dotenv()                    # pulls the key from .env
+load_dotenv()                  
 client = openai.Client()
 
 file_ids = []

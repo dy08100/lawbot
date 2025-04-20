@@ -4,23 +4,14 @@ load_dotenv()
 
 client = openai.Client()
 
-# ------------------------------------------------------------------
-# 1.  Load the PDF file IDs we previously uploaded
-# ------------------------------------------------------------------
 file_ids = json.load(open("file_ids.json"))
 
-# ------------------------------------------------------------------
-# 2.  Create (or reuse) a vector‑store that indexes those PDFs
-# ------------------------------------------------------------------
 vector_store = client.vector_stores.create(
     name     = "LawBotStore",
     file_ids = file_ids
 )
 print("Vector‑store ID:", vector_store.id)
 
-# ------------------------------------------------------------------
-# 3.  Create the Assistant and point its 'file_search' tool at the store
-# ------------------------------------------------------------------
 assistant = client.beta.assistants.create(
     name         = "LawBot‑CrimImm",
     model        = "gpt-4.1",
