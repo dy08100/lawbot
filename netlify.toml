@@ -1,0 +1,5 @@
+[build]
+  # No build command (we’re serving static files)
+  command = ""
+  # Tell Netlify to publish from the static folder
+  publish = "static"
