@@ -3,3 +3,6 @@ __pycache__/
 .env
 file_ids.json
 assistant_id.txt
+
+# Local Netlify folder
+.netlify
