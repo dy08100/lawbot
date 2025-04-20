@@ -1,3 +1,4 @@
+// Grab DOM elements
 const chat      = document.getElementById('chat');
 const form      = document.getElementById('form');
 const input     = document.getElementById('prompt');
@@ -34,26 +35,48 @@ function addBubble(text, cls) {
   return div;
 }
 
-// ── Welcome message on load ─────────────────────────────────────
+// ── On load: show welcome & handle initial URL query ────────────
 window.addEventListener('load', () => {
-  addBubble("Hello! 👋 I'm LawBot, your AI Criminal & Immigration Advisor. How can I help you today?", 'bot');
+  // Welcome
+  addBubble(
+    "Hello! 👋 I'm LawBot, your AI Criminal & Immigration Advisor. How can I help you today?",
+    'bot'
+  );
   input.focus();
+
+  // Check for initial prompt in URL
+  const params  = new URLSearchParams(window.location.search);
+  const initial = params.get('initial');
+  if (initial) {
+    // Insert into textarea & resize
+    input.value = initial;
+    input.style.height = 'auto';
+    input.style.height = input.scrollHeight + 'px';
+
+    // Delay so the UI updates, then submit
+    setTimeout(() => form.dispatchEvent(new Event('submit')), 300);
+  }
 });
 
-// ── Form submit ─────────────────────────────────────────────────
+// ── Handle form submission ───────────────────────────────────────
 form.addEventListener('submit', async e => {
   e.preventDefault();
   const msg = input.value.trim();
   if (!msg) return;
 
-  addBubble(msg, 'user');          // user bubble
+  // Show user bubble
+  addBubble(msg, 'user');
+  // Show thinking placeholder
   const thinking = addBubble('Thinking...', 'bot thinking');
+
+  // Reset input
   input.value = '';
   input.style.height = 'auto';
   input.disabled = true;
-  closeSidebar();                  // close nav if open
+  closeSidebar();
 
   try {
+    // Call your backend
     const res = await fetch('https://lawbot-api.onrender.com/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -62,7 +85,7 @@ form.addEventListener('submit', async e => {
     const data = await res.json();
     thread_id = data.thread_id;
 
-    // replace thinking with real answer
+    // Replace thinking with real answer
     thinking.classList.remove('thinking');
     thinking.innerHTML = marked.parse(data.answer);
   } catch (err) {
