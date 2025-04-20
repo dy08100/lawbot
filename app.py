@@ -56,4 +56,7 @@ def chat():
     return jsonify({"answer": answer, "thread_id": thread_id})
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    import os
+    port = int(os.environ.get("PORT", 5000))
+    # Listen on all interfaces so Render can route traffic in
+    app.run(host="0.0.0.0", port=port, debug=True)
