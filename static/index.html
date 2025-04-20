@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>LawBot – criminal & immigration answers</title>
+<style>
+body{font-family:system-ui;margin:0 auto;max-width:800px}
+#chat{margin:20px 0;min-height:60vh;overflow:auto;border:1px solid #ddd;padding:10px}
+.bubble{padding:8px 12px;border-radius:10px;margin:4px 0;max-width:80%}
+.user{background:#cfe2ff;margin-left:auto}
+.bot {background:#f1f1f1;margin-right:auto}
+</style>
+<h1>Ask LawBot</h1>
+<div id="chat"></div>
+<form id="form">
+  <input id="prompt" placeholder="Type a question…" style="width:80%">
+  <button>Send</button>
+</form>
+<script>
+const chat  = document.getElementById('chat');
+const form  = document.getElementById('form');
+const input = document.getElementById('prompt');
+let thread_id = null;
+
+function add(text, cls){
+  const div=document.createElement('div');
+  div.className='bubble '+cls;
+  div.textContent=text;
+  chat.appendChild(div);
+  chat.scrollTop=chat.scrollHeight;
+}
+
+form.onsubmit = async e=>{
+  e.preventDefault();
+  const msg=input.value.trim();
+  if(!msg) return;
+  add(msg,'user');
+  input.value='';
+
+  const res = await fetch('/chat',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({message:msg, thread_id})
+  });
+  const data = await res.json();
+  thread_id = data.thread_id;
+  add(data.answer,'bot');
+};
+</script>
+</html>
