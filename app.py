@@ -39,12 +39,19 @@ def chat():
         thread_id=thread_id, role="user", content=user_msg
     )
 
+    # --- 3. Run assistant
     run = client.beta.threads.runs.create(
         thread_id=thread_id, assistant_id=ASSISTANT_ID
     )
-    while run.status not in ("completed","failed","cancelled"):
+
+    # --- 4. Poll until complete (pass both IDs!)
+    while run.status not in ("completed", "failed", "cancelled"):
         time.sleep(0.5)
-        run = client.beta.threads.runs.retrieve(run.id)
+        run = client.beta.threads.runs.retrieve(
+            thread_id=thread_id,
+            run_id=run.id
+        )
+
 
     msg = client.beta.threads.messages.list(thread_id=thread_id, limit=1)
     answer = msg.data[0].content[0].text.value
