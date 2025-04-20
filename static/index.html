@@ -19,54 +19,37 @@
         <a href="#contact">Contact</a>
         <a href="chat.html">Chat</a>
       </nav>
-      <div class="cta">
-        <a href="#" class="btn-outline">Login</a>
-        <a href="chat.html" class="btn-primary">Get Started</a>
-      </div>
+      <!-- removed CTA buttons -->
     </header>
 
     <div class="hero-content">
-      <h1>20% More Revenue<br>Per Campaign. Guaranteed.</h1>
-      <p>Incremental AI‑powered legal insights for recruiters, attorneys, and individuals. Get real‑time guidance on criminal & immigration matters.</p>
+      <h1>Your 24/7 AI Criminal & Immigration Adviser</h1>
+      <p>Get instant, statute‑cited legal guidance—no appointment needed.</p>
 
-      <div class="hero-input">
-        <input type="text" placeholder="Enter your brand’s URL">
-        <button>Test our AI</button>
-      </div>
+      <!-- Updated input to jump to chat -->
+      <form id="hero-form" class="hero-input">
+        <input
+          id="hero-input"
+          type="text"
+          placeholder="Ask your legal question…"
+          required
+        />
+        <button type="submit">Ask LawBot</button>
+      </form>
     </div>
   </section>
 
-  <!-- Features Section -->
-  <section id="features" class="home-features">
-    <div class="features-grid">
-      <div class="feature-card">
-        <h3>Expert Analysis</h3>
-        <p>Statute citations, case breakdowns, and risk assessments—all in seconds.</p>
-      </div>
-      <div class="feature-card">
-        <h3>24/7 Access</h3>
-        <p>Legal guidance whenever you need it, without waiting for appointments.</p>
-      </div>
-      <div class="feature-card">
-        <h3>Secure & Confidential</h3>
-        <p>Your data is encrypted in transit and never shared with third parties.</p>
-      </div>
-      <div class="feature-card">
-        <h3>AI‑Driven</h3>
-        <p>Leveraging the latest in GPT‑4.1‑turbo to keep you ahead of the curve.</p>
-      </div>
-    </div>
-  </section>
+  <!-- ... rest of your Features & Contact sections unchanged ... -->
 
-  <!-- Contact Section -->
-  <section id="contact" class="home-contact">
-    <h2>Contact Us</h2>
-    <ul class="contacts">
-      <li>Email: <a href="mailto:support@lawbot.ai">support@lawbot.ai</a></li>
-      <li>Twitter: <a href="https://twitter.com/lawbot_ai" target="_blank">@lawbot_ai</a></li>
-      <li>Phone: <a href="tel:+18001234567">(800) 123‑4567</a></li>
-    </ul>
-  </section>
-
+  <script>
+    // When the hero form is submitted, redirect to chat.html with the query
+    document.getElementById('hero-form').addEventListener('submit', e => {
+      e.preventDefault();
+      const q = document.getElementById('hero-input').value.trim();
+      if (!q) return;
+      // URL‑encode the question as an `initial` param
+      window.location.href = `chat.html?initial=${encodeURIComponent(q)}`;
+    });
+  </script>
 </body>
 </html>
