@@ -4,13 +4,31 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Chat – LawBot AI</title>
+
+  <!-- Google Font -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <link href="style.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <h2>Navigation</h2>
+    <a href="index.html">🏠 Home</a>
+    <a href="chat.html">💬 Chat</a>
+  </div>
+  <div class="overlay" id="overlay"></div>
+
+  <!-- Chat App -->
   <div class="chat-container">
-    <div class="chat-header">LawBot AI Chat</div>
+    <div class="chat-header">
+      <div class="hamburger" id="hamburger">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+      </div>
+      LawBot AI Chat
+    </div>
     <div id="chat"></div>
 
     <form id="form" class="chat-input">
