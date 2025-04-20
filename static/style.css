@@ -554,3 +554,47 @@ a { color: inherit; text-decoration: none; }
 .chat-header {
   padding-left: 3rem;        /* ensure hamburger doesn’t sit on top of title */
 }
+/* ── 1. Prevent AI text overflow ─────────────────────────────────── */
+.bubble.bot {
+  display: inline-block;       /* shrink to content */
+  max-width: 75%;              /* cap width so lines wrap */
+  white-space: normal;         /* allow normal wrapping */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* ── 2. Tighter user bubbles ────────────────────────────────────── */
+.bubble.user {
+  display: inline-block;
+  max-width: 50%;              /* smaller cap for tighter look */
+  padding: 0.5rem 0.75rem;     /* slightly less padding */
+  white-space: normal;
+  word-wrap: break-word;
+  float: right;
+}
+
+/* ── 3. Style lists inside bubbles ───────────────────────────────── */
+.bubble ul,
+.bubble ol {
+  margin: 0.75rem 0 0.75rem 0;
+  padding-left: 1.25rem;
+}
+.bubble li {
+  margin-bottom: 0.25rem;
+  line-height: 1.4;
+}
+
+/* ── 4. Center header text, keep hamburger left ─────────────────── */
+.chat-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;    /* center the title */
+  padding: 1rem 3rem;         /* extra right pad so title isn't under overlay */
+}
+.chat-header .hamburger {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
