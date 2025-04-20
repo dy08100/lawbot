@@ -9,7 +9,12 @@ with open("assistant_id.txt") as f:
     ASSISTANT_ID = f.read().strip()
 
 app = Flask(__name__)
-CORS(app)                      # *Everything* can call it – lock down later
+CORS(
+    app,
+    resources={r"/chat": {"origins": "https://bucolic-starship-2589fd.netlify.app"}},
+    supports_credentials=True
+)
+                   
 
 @app.route("/chat", methods=["POST"])
 def chat():
