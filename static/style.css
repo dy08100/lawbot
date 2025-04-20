@@ -500,3 +500,57 @@ a { color: inherit; text-decoration: none; }
 .chat-header {
   padding-left: 3rem;         /* push the title right of the hamburger */
 }
+/* ── Chat Bubble Alignment & Sizing ───────────────────────────────── */
+
+/* Make each bubble shrink to its content and wrap text */
+.bubble {
+  display: inline-block;
+  clear: both;               /* each bubble starts on its own line */
+  white-space: pre-wrap;     /* preserve line breaks */
+  word-wrap: break-word;     /* wrap long words */
+  max-width: 75%;            /* cap width so it doesn’t span whole screen */
+  margin: 0.5rem 0;
+}
+
+/* Bot bubbles on the left */
+.bubble.bot {
+  float: left;
+  background: #111827;       /* dark panel */
+  color: #e5e7eb;
+  text-align: left;
+}
+
+/* User bubbles on the right */
+.bubble.user {
+  float: right;
+  background: #3b82f6;       /* accent blue */
+  color: #fff;
+  text-align: right;
+}
+
+/* Clear floats inside the chat container */
+#chat::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* ── “Thinking…” Gradient Text ──────────────────────────────────── */
+.bubble.thinking {
+  background: linear-gradient(90deg, #3b82f6, #9333ea, #3b82f6);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientMove 2s linear infinite;
+}
+
+/* Gradient animation */
+@keyframes gradientMove {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+/* ── Header Padding Fix ─────────────────────────────────────────── */
+.chat-header {
+  padding-left: 3rem;        /* ensure hamburger doesn’t sit on top of title */
+}
